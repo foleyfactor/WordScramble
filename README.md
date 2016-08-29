@@ -21,5 +21,5 @@ WordScramble can be used by calling the `scramble` function on a jQuery text obj
  - wordList: an array of words that can be looped through infinitely. Default: [].
  - wordIndex: the index in the wordList that the animation should start with. Default: 0.
  
- #Suggestions/Comments
- Have an idea and want to make WordScramble even better in the future? Let me know! Shoot me a message or submit a pull request!
+#Suggestions/Comments
+Have an idea and want to make WordScramble even better in the future? Let me know! Shoot me a message or submit a pull request!
