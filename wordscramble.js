@@ -71,7 +71,6 @@ function mapLetters(from, to) {
 			map[i].push(to.length+1);
 			map[i].push(0);
 		} else if (toArray.contains(from[i])) {
-			console.log(toArray);
 			map[i].push(from[i]);
 			map[i].push(toArray.indexOf(from[i], true));
 			map[i].push(to.spaceCount(map[i][1]));
@@ -145,120 +144,122 @@ function createMovingList( parent, to, map ) {
 	return movers;
 }
 
-$.fn.scramble = function( to, options ) {
-	var settings = $.extend({
-		yDuration: 400,
-		xDuration: 700,
-		infinite: false,
-		unscramble: false,
-		initialDelay: 0,
-		finalDelay: 1000,
-		wordList: [],
-		wordIndex: 0,
-	}, options);
+(function($) {
+	$.fn.scramble = function( to, options ) {
+		var settings = $.extend({
+			yDuration: 400,
+			xDuration: 700,
+			infinite: false,
+			unscramble: false,
+			initialDelay: 0,
+			finalDelay: 1000,
+			wordList: [],
+			wordIndex: 0,
+		}, options);
 
-	var from = $(this).text().toUpperCase();
-	to = to.toUpperCase();
+		var from = $(this).text().toUpperCase();
+		to = to.toUpperCase();
 
-	$element = $(this);
+		$element = $(this);
 
-	$element.text("");
-	
-	if (from.replace(/ /g, '').length != to.replace(/ /g, '').length) {
-		//Effect will only work for phrases with the same number of non-whitespace
-		//characters
-		return;
-	}
+		$element.text("");
+		
+		if (from.replace(/ /g, '').length != to.replace(/ /g, '').length) {
+			//Effect will only work for phrases with the same number of non-whitespace
+			//characters
+			return;
+		}
 
-	var map = mapLetters(from, to);
-	movers = createMovingList($element, to, map);
+		var map = mapLetters(from, to);
+		movers = createMovingList($element, to, map);
 
-	var returned = false;
+		var returned = false;
 
-	var space = getSpaceSize($element);
+		var space = getSpaceSize($element);
 
-	if ($('.anagram-space').length > 0) {
+		if ($('.anagram-space').length > 0) {
 
-		$('.anagram-space').velocity({width: '0'}, {duration:300,
-			progress: function(elements, percentComplete, timeRemaining, timeStart) {
-				if (percentComplete === 1) {
-					for (var i=0; i<movers.length; i++) {
-						movers[i][0].velocity({
-							translateY: (movers[i][2] + "px")
-						}, {duration: settings.yDuration, delay: settings.initialDelay})
-						
-						.velocity({
-							translateX: (movers[i][1] + "px")
-						}, {duration: settings.xDuration})
+			$('.anagram-space').velocity({width: '0'}, {duration:300,
+				progress: function(elements, percentComplete, timeRemaining, timeStart) {
+					if (percentComplete === 1) {
+						for (var i=0; i<movers.length; i++) {
+							movers[i][0].velocity({
+								translateY: (movers[i][2] + "px")
+							}, {duration: settings.yDuration, delay: settings.initialDelay})
+							
+							.velocity({
+								translateX: (movers[i][1] + "px")
+							}, {duration: settings.xDuration})
 
-						.velocity({
-							translateY: "0px"
-						}, {duration: settings.yDuration})
+							.velocity({
+								translateY: "0px"
+							}, {duration: settings.yDuration})
 
-						.velocity({
-							translateX: ((movers[i][1] + (space*map[i][2])) + "px")
-						}, {duration: 300, 
-							progress: function(elements, percentComplete, timeRemaining, timeStart) {
-								if (percentComplete == 1 && !returned) {
-										returned = true;
-										$element.empty().text(to);
-										setTimeout(function() { 
-											if (settings.unscramble) {
-												return $element.scramble(from);
-											} else if (settings.infinite) {
-												return $element.scramble(from, {infinite: true});
-											} else if (settings.wordList.length > 0) {
-												var newIndex = (settings.wordIndex+1)%settings.wordList.length;
-												return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
-											} else {
-												return $element;
-											}
-										}, settings.finalDelay);
+							.velocity({
+								translateX: ((movers[i][1] + (space*map[i][2])) + "px")
+							}, {duration: 300, 
+								progress: function(elements, percentComplete, timeRemaining, timeStart) {
+									if (percentComplete == 1 && !returned) {
+											returned = true;
+											$element.empty().text(to);
+											setTimeout(function() { 
+												if (settings.unscramble) {
+													return $element.scramble(from);
+												} else if (settings.infinite) {
+													return $element.scramble(from, {infinite: true});
+												} else if (settings.wordList.length > 0) {
+													var newIndex = (settings.wordIndex+1)%settings.wordList.length;
+													return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
+												} else {
+													return $element;
+												}
+											}, settings.finalDelay);
+										}
 									}
 								}
-							}
-						);
-					}	
-				}
-			}
-		});
-	} else {
-		for (var i=0; i<movers.length; i++) {
-			movers[i][0].velocity({
-				translateY: (movers[i][2] + "px")
-			}, {duration: settings.yDuration, delay: settings.initialDelay})
-			
-			.velocity({
-				translateX: (movers[i][1] + "px")
-			}, {duration: settings.xDuration})
-
-			.velocity({
-				translateY: "0px"
-			}, {duration: settings.yDuration})
-
-			.velocity({
-				translateX: ((movers[i][1] + (space*map[i][2])) + "px")
-			}, {duration: 300, 
-				progress: function(elements, percentComplete, timeRemaining, timeStart) {
-					if (percentComplete == 1 && !returned) {
-							returned = true;
-							$element.empty().text(to);
-							setTimeout(function() {
-								if (settings.unscramble) {
-									return $element.scramble(from);
-								} else if (settings.infinite) {
-									return $element.scramble(from, {infinite: true});
-								} else if (settings.wordList.length > 0) {
-									var newIndex = (settings.wordIndex+1)%settings.wordList.length;
-									return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
-								} else {
-									return $element;
-								}
-							}, settings.finalDelay);
-						}
+							);
+						}	
 					}
 				}
-			);
+			});
+		} else {
+			for (var i=0; i<movers.length; i++) {
+				movers[i][0].velocity({
+					translateY: (movers[i][2] + "px")
+				}, {duration: settings.yDuration, delay: settings.initialDelay})
+				
+				.velocity({
+					translateX: (movers[i][1] + "px")
+				}, {duration: settings.xDuration})
+
+				.velocity({
+					translateY: "0px"
+				}, {duration: settings.yDuration})
+
+				.velocity({
+					translateX: ((movers[i][1] + (space*map[i][2])) + "px")
+				}, {duration: 300, 
+					progress: function(elements, percentComplete, timeRemaining, timeStart) {
+						if (percentComplete == 1 && !returned) {
+								returned = true;
+								$element.empty().text(to);
+								setTimeout(function() {
+									if (settings.unscramble) {
+										return $element.scramble(from);
+									} else if (settings.infinite) {
+										return $element.scramble(from, {infinite: true});
+									} else if (settings.wordList.length > 0) {
+										var newIndex = (settings.wordIndex+1)%settings.wordList.length;
+										return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
+									} else {
+										return $element;
+									}
+								}, settings.finalDelay);
+							}
+						}
+					}
+				);
+			}
 		}
 	}
-}
+}(jQuery));
