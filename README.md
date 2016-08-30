@@ -1,5 +1,5 @@
 # WordScramble
-Word (anagram) scrambling/unscrambling animation for JavaScript
+Word scrambling/unscrambling animation for JavaScript
 
 Ever wanted to show off your inner linguist by having two anagrams shuffle, or have a meaningless string unscramble into a word? Now you can!
 
