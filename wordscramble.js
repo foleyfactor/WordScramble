@@ -30,7 +30,7 @@ function indexify( string ) {
 			var minKey = '';
 			for (key in this) {
 				if (this[key].length > 0 && typeof(this[key]) !== 'function') {
-					if (this[key][0] < min) {
+					if (this[key][0] < min && key.trim().length > 0) {
 						min = this[key][0];
 						minKey = key;
 					}
@@ -85,6 +85,7 @@ function mapLetters(from, to) {
 			map[i].push(to.length+1);
 			map[i].push(0);
 		} else if (map[i].length == 0) {
+			console.log(fromArray);
 			map[i].push(fromArray.getNext(true));
 			map[i].push(toArray.indexOf(toArray.getNext(false), true));
 			map[i].push(to.spaceCount(map[i][1]));
