@@ -1,7 +1,7 @@
 # WordScramble
 Word scrambling/unscrambling animation for JavaScript
 
-Ever wanted to show off your inner linguist by having two anagrams shuffle, or have a meaningless string unscramble into a word? Now you can!
+Ever wanted to show off your inner linguist by having two anagrams shuffle, or having a meaningless string unscramble into a word? Now you can!
 
 #Requirements
 The WordScramble plugin requires both the [jQuery](https://jquery.com/) and [Velocity](https://github.com/julianshapiro/velocity) libraries.
