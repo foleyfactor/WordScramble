@@ -154,11 +154,17 @@ function createMovingList( parent, to, map ) {
 			initialDelay: 0,
 			finalDelay: 1000,
 			wordList: [],
-			wordIndex: 0,
+			wordIndex: -1,
+			loopCount: 1
 		}, options);
 
 		var from = $(this).text().toUpperCase();
 		to = to.toUpperCase();
+
+		if (settings.wordList.length > 0 && settings.wordIndex == -1) {
+			settings.wordList.push(from);
+			settings.wordList.push(to);
+		}
 
 		$element = $(this);
 
@@ -207,12 +213,15 @@ function createMovingList( parent, to, map ) {
 													return $element.scramble(from);
 												} else if (settings.infinite) {
 													return $element.scramble(from, {infinite: true});
-												} else if (settings.wordList.length > 0) {
+												} else if (settings.wordList.length > 0 && settings.wordIndex < settings.loopCount-2) {
 													var newIndex = (settings.wordIndex+1)%settings.wordList.length;
-													return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
+													return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: settings.wordIndex+1, loopCount: settings.loopCount});
+												} else if (settings.loopCount > 1 && settings.wordIndex < settings.loopCount-2){
+													return $element.scramble(from, {loopCount: settings.loopCount, wordIndex: settings.wordIndex+1});
 												} else {
 													return $element;
 												}
+												
 											}, settings.finalDelay);
 										}
 									}
@@ -246,11 +255,13 @@ function createMovingList( parent, to, map ) {
 								setTimeout(function() {
 									if (settings.unscramble) {
 										return $element.scramble(from);
-									} else if (settings.infinite) {
-										return $element.scramble(from, {infinite: true});
-									} else if (settings.wordList.length > 0) {
+									} else if (settings.infinite && settings.wordIndex < settings.loopCount-2) {
+										return $element.scramble(from, {infinite: true, loopCount: settings.loopCount, wordIndex: settings.wordIndex+1});
+									} else if (settings.wordList.length > 0 && settings.wordIndex < settings.loopCount) {
 										var newIndex = (settings.wordIndex+1)%settings.wordList.length;
-										return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
+										return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: settings.wordIndex+1, loopCount: settings.loopCount});
+									} else if (settings.loopCount > 1 && settings.wordIndex < settings.loopCount-2){
+										return $element.scramble(from, {loopCount: settings.loopCount, wordIndex: settings.wordIndex+1});
 									} else {
 										return $element;
 									}
