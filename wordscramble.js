@@ -80,9 +80,6 @@ function mapLetters(from, to) {
 		}
 	}
 
-	console.log(fromArray);
-	console.log(toArray);
-
 	for (var i=0; i<map.length; i++) {
 		if (map[i].length == 0) {
 			map[i].push(fromArray.getNext(true));
@@ -90,8 +87,6 @@ function mapLetters(from, to) {
 			map[i].push(to.spaceCount(map[i][1]));
 		}
 	}
-
-	console.log(map);
 	return map;
 }
 
@@ -159,13 +154,13 @@ $.fn.scramble = function( to, options ) {
 		initialDelay: 0,
 		finalDelay: 1000,
 		wordList: [],
-		wordIndex: 0
+		wordIndex: 0,
 	}, options);
 
-	var from = $(this).text();
-	$element = $(this);
+	var from = $(this).text().toUpperCase();
+	to = to.toUpperCase();
 
-	console.log(from, to);
+	$element = $(this);
 
 	$element.text("");
 	
@@ -267,21 +262,3 @@ $.fn.scramble = function( to, options ) {
 		}
 	}
 }
-
-// if (percentComplete == 1 && !returned) {
-// 								returned = true;
-// 								$element.empty().text(to);
-// 								setTimeout(function() {
-// 									if (settings.unscramble) {
-// 										return $element.scramble(from);
-// 									} else if (settings.infinite) {
-// 										return $element.scramble(from, {infinite: true});
-// 									} else if (settings.wordList.length > 0) {
-// 										var newIndex = (settings.wordIndex+1)%settings.wordList.length;
-// 										return $element.scramble(settings.wordList[newIndex], {wordList: settings.wordList, wordIndex: newIndex})
-// 									} else {
-// 										return $element;
-// 									}
-// 								}, settings.finalDelay);
-// 							}
-// 						}
