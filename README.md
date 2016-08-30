@@ -14,8 +14,9 @@ WordScramble can be used by calling the `scramble` function on a jQuery text obj
 `$element.scramble(endString, {options})`, with the following options:
  - yDuration: the amount of time (ms) that the letters animate vertically for (each time). Default: 400.
  - xDuration: the amount of time (ms) that the letters animate horizontally. Default: 700.
- - infinite: whether or not the animation should loop forever. Default: false.
- - unscramble: whether or not the animation should perform the animation and then reverse it. Default: false.
+ - loopCount: the number of times the animation should loop (back and forth unless a wordList is specified). Default 1.
+ - infinite: shortcut for `loopCount: Infinity`. Default: false.
+ - unscramble: whether or not the animation should perform the animation and then reverse it (shortcut for `loopCount: 2` Default: false.
  - initialDelay: the amount of time (ms) before the animation begins. Default: 0.
  - finalDelay: the amount of time (ms) after the animation ends and the next animation can proceed. Default: 1000.
  - wordList: an additional array of words that can be looped through infinitely. The initial value and the specified endString will also be included. Default: [].
