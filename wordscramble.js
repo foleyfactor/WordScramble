@@ -18,7 +18,7 @@ String.prototype.spaceCount = function(index) {
 function indexify( string ) {
 	var obj = {
 		contains: function(substring) {
-			return this[substring] != null;
+			return (this[substring] != null && this[substring].length > 0);
 		},
 		indexOf: function(letter, del) {
 			var temp = this[letter][0]+0;
@@ -71,6 +71,7 @@ function mapLetters(from, to) {
 			map[i].push(to.length+1);
 			map[i].push(0);
 		} else if (toArray.contains(from[i])) {
+			console.log(toArray);
 			map[i].push(from[i]);
 			map[i].push(toArray.indexOf(from[i], true));
 			map[i].push(to.spaceCount(map[i][1]));
@@ -79,13 +80,11 @@ function mapLetters(from, to) {
 		}
 	}
 
+	console.log(fromArray);
+	console.log(toArray);
+
 	for (var i=0; i<map.length; i++) {
-		if (from[i] === ' ') {
-			map[i].push(' ');
-			map[i].push(to.length+1);
-			map[i].push(0);
-		} else if (map[i].length == 0) {
-			console.log(fromArray);
+		if (map[i].length == 0) {
 			map[i].push(fromArray.getNext(true));
 			map[i].push(toArray.indexOf(toArray.getNext(false), true));
 			map[i].push(to.spaceCount(map[i][1]));
