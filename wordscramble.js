@@ -59,9 +59,10 @@ function createBlankArray( size ) {
 	return arr;
 }
 
-function mapLetters(from, to) {
+function mapLetters(from, to, align) {
 	var fromArray = indexify(from);
 	var toArray = indexify(to);
+	var numSpaces = countSpaces(to);
 
 	map = createBlankArray(from.length);
 	
@@ -73,7 +74,15 @@ function mapLetters(from, to) {
 		} else if (toArray.contains(from[i])) {
 			map[i].push(from[i]);
 			map[i].push(toArray.indexOf(from[i], true));
-			map[i].push(to.spaceCount(map[i][1]));
+			
+			if (align === 'center') {
+				console.log((2*to.spaceCount(map[i][1]) - numSpaces)/2);
+				map[i].push((2*to.spaceCount(map[i][1]) - numSpaces)/2);
+			} else if (align === 'right') {
+				map[i].push(to.spaceCount(map[i][1]) - numSpaces);
+			} else {
+				map[i].push(to.spaceCount(map[i][1]));
+			}
 
 			fromArray.indexOf(from[i], true);
 		}
@@ -83,9 +92,18 @@ function mapLetters(from, to) {
 		if (map[i].length == 0) {
 			map[i].push(fromArray.getNext(true));
 			map[i].push(toArray.indexOf(toArray.getNext(false), true));
-			map[i].push(to.spaceCount(map[i][1]));
+
+			if (align === 'center') {
+				console.log((2*to.spaceCount(map[i][1]) - numSpaces)/2);
+				map[i].push((2*to.spaceCount(map[i][1]) - numSpaces)/2);
+			} else if (align === 'right') {
+				map[i].push(to.spaceCount(map[i][1]) - numSpaces);
+			} else {
+				map[i].push(to.spaceCount(map[i][1]));
+			}
 		}
 	}
+	console.log(map);
 	return map;
 }
 
@@ -95,6 +113,16 @@ function getSpaceSize(element) {
 	var width = test.width();
 	test.remove();
 	return width;
+}
+
+function countSpaces(word) {
+	var count = 0;
+	for (var i=0; i<word.length; i++) {
+		if (word[i] === ' ') {
+			count ++;
+		}
+	}
+	return count;
 }
 
 function createMovingList( parent, to, map ) {
@@ -155,7 +183,8 @@ function createMovingList( parent, to, map ) {
 			finalDelay: 1000,
 			wordList: [],
 			wordIndex: -1,
-			loopCount: 1
+			loopCount: 1,
+			align: 'left'
 		}, options);
 
 		var from = $(this).text().toUpperCase();
@@ -176,7 +205,7 @@ function createMovingList( parent, to, map ) {
 			return;
 		}
 
-		var map = mapLetters(from, to);
+		var map = mapLetters(from, to, settings.align);
 		movers = createMovingList($element, to, map);
 
 		var returned = false;
